@@ -37,13 +37,13 @@ io.on('connection', (socket)=>{
         console.log('AtenderTurno')
         if (listaTurnos.length>0) {
             listaAtendidos.unshift({nombre:listaTurnos[0],puesto:puesto,hora:Date.now()})//agrega elemento al princio de un arreglo
-            listaTurnos.shift() //borra primer elemento de la lista
+            listaTurnos.shift() 
             enviarListados(true)
         }
     });
     socket.on('CrearTurno', data => {
         console.log('CrearTurno')
-        listaTurnos.push(data) //Agrego item al final de la lista
+        listaTurnos.push(data) 
         enviarListados(false)
     });
 });
