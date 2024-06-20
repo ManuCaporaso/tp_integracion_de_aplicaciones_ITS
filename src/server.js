@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
 });
 
 
-http.listen(3000, () => console.log('SERVER ON http://localhost:3000'));
+http.listen(3000, () => console.log('SERVIDOR FUNCIONANDO EN http://localhost:3000'));
 
 function enviarListados(alerta){
     io.sockets.emit('ListaDeTurnos', {pendientes:listaTurnos,atendidos:listaAtendidos,alerta:alerta}); 
