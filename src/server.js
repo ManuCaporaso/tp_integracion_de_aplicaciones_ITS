@@ -9,14 +9,14 @@ const io = require('socket.io')(http);
 const listaTurnos = ["Enzo Francescoli", "Ariel Ortega", "Franco Armani", "Miguel Borja", "Enzo Pérez"];
 const listaAtendidos = [];
 
-app.use(express.static('./puclic'));
+app.use(express.static('./public'));
 
 app.get('/', (req, res) => {
     res.sendFile('index.html', {root: __dirname})
 });
 
 
-http.listen(3000, () => console.log('SERVER ON\n http://localhost:3000'));
+http.listen(3000, () => console.log('SERVER ON http://localhost:3000'));
 
 function enviarListados(alerta){
     io.sockets.emit('ListaDeTurnos', {pendientes:listaTurnos,atendidos:listaAtendidos,alerta:alerta}); //Envio Arreglo listaTurno a todos los sockets

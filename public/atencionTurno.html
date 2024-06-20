@@ -3,9 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ATENCION DE TURNO</title>
+    <title>Atender Turno</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io(); // Crear el Socket
+        function atencionTurno(puesto){
+            socket.emit('AtenderTurno', puesto)
+        }
+    </script>
 </head>
 <body>
-    
+    <header>
+        <h1>Atender Turno</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a target="_blank"  href="turnoActual.html">Turno Actual</a></li>
+            <li><a target="_blank"  href="asignacionTurno.html">Nuevo Turno</a></li>
+        </ul>
+    </nav>
+    <main>
+        <h2>El proximo turno sera atendido por:</h2>
+        <button id="atender-turno" onclick="javascript:atencionTurno(1)">Atender Puesto 1</button>
+        <button id="atender-turno" onclick="javascript:atencionTurno(2)">Atender Puesto 2</button>
+        <button id="atender-turno" onclick="javascript:atencionTurno(3)">Atender Puesto 3</button>
+    </main>
 </body>
+<footer>
+    <div class="navbar2">
+        <p>&copy; 2024 Integracion de Aplicaciones - Todos los derechos reservados</p>
+        <a href="./index.html"><img src="./img/logoITS.png" alt="logo"></a>
+    </div>
+</footer>
 </html>

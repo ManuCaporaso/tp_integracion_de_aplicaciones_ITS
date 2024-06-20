@@ -3,9 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TURNO ACTUAL</title>
+    <title>Turno Actual</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io(); // Ya podemos empezar a usar los sockets desde el cliente :)
+ 
+        // Cliente
+        socket.on('ListaDeTurnos', data => {
+            var audio = document.getElementById("audio");
+            actualizacionTurnos(data.pendientes,data.atendidos)
+            //reproducir sonido
+            if (data.alerta)
+                audio.play();   
+        })
+
+        function actualizacionTurnos(pendientes,atendidos) {
+            const turnoActualElement = document.getElementById('turno-actual');
+            const proximosTurnosElement = document.getElementById('proximos-turnos');
+            const turnosAtendidosElement = document.getElementById('turnos-atendidos');
+            const turnosAntendidosDiaElement = document.getElementById('turnos-antendidos-dia');       
+
+            turnoActualElement.innerHTML=''
+            // Actualizar el turno actual
+            if (atendidos.length > 0) {
+                const card = document.createElement('div');
+                card.className = 'card';
+                const { minutos, segundos } = calcularDiferencia(atendidos[0].hora);
+                card.innerHTML =`<div class="card-header">${atendidos[0].nombre}</div>
+                                        <div class="card-content">Puesto: ${atendidos[0].puesto}</div>
+                                        <div class="card-footer">${minutos} minutos </div>`;
+                turnoActualElement.appendChild(card);                  
+            } else {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.textContent = 'No hay turnos en este momento.';
+                turnoActualElement.appendChild(card);                
+            }
+
+            
+
+            // Limpiar la lista de próximos turnos
+            proximosTurnosElement.innerHTML = '';
+
+            // Actualizar los próximos turnos
+            if (pendientes.length > 0) {
+                for (let i = 0; i < pendientes.length; i++) {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `<div class="card-header">${pendientes[i]}</div>`;
+                    proximosTurnosElement.appendChild(card);                      
+                }
+            } else {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `<div class="card-header">No hay próximos turnos.</div>`;
+                proximosTurnosElement.appendChild(card);                 
+            }
+
+            // Limpiar la lista de próximos turnos
+            turnosAtendidosElement.innerHTML = '';
+
+            // Actualizar los  turnos antendidos
+            if (atendidos.length > 1) {
+                for (let i = 1; i < atendidos.length && i <=5; i++) {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    const { minutos, segundos } = calcularDiferencia(atendidos[i].hora);
+                    card.innerHTML = `<div class="card-header">${atendidos[i].nombre}</div>
+                                        <div class="card-content">Puesto: ${atendidos[i].puesto}</div>
+                                        <div class="card-footer">${minutos} minutos </div>`;
+                    turnosAtendidosElement.appendChild(card);                                          
+                }
+            } else {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.textContent = 'No hay otros turnos atendidos.';
+                turnosAtendidosElement.appendChild(card);
+            }
+
+            //Mostrar los turnos atendidos en el dia
+            turnosAntendidosDiaElement.innerHTML = 'Turnos Atendidos hoy: '+atendidos.length;
+
+
+        }
+
+
+        // Función para calcular la diferencia de tiempo
+        function calcularDiferencia(timestamp) {
+            const ahora = Date.now();
+            const diferencia = ahora - timestamp;
+            const minutos = Math.floor(diferencia / (1000 * 60));
+            const segundos = Math.floor((diferencia / 1000) % 60);
+            return { minutos, segundos };
+        }
+
+
+    </script>
 </head>
-<body>
-    
+<body onload="socket.emit('VentanaTurnoActual', '')">
+
+    <audio id="audio" preload="auto">
+        <source src="/sounds/tindeck_1.mp3" type="audio/wav" autoplay>
+    </audio>
+
+    <header>
+        <h1>Turno Actual y Próximos</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a target="_blank"  href="asignacionTurno.html">Nuevo Turno</a></li>
+            <li><a target="_blank"  href="atencionTurno.html">Atender Turno</a></li>
+            <li><a target ="_blank" id="turnos-antendidos-dia"></a></li>
+        </ul>
+    </nav>
+    <main>
+        <h2>Turno Actual</h2>
+        <div id="turno-actual" class="container"></div>
+        <h2>Atendidos</h2>
+        <div id="turnos-atendidos" class="container"></div>
+        <h2>Próximos Turnos</h2>
+        <div id="proximos-turnos" class="container"></div>
+    </main>
 </body>
+<footer>
+    <div class="navbar2">
+        <p>&copy; 2024 Integracion de Aplicaciones - Todos los derechos reservados</p>
+        <a href="./index.html"><img src="./img/logoITS.png" alt="logo"></a>
+    </div>
+</footer>
 </html>

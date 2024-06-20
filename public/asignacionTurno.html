@@ -3,9 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASIGNACION DE TURNO</title>
+    <title>Nuevo Turno</title>
+    <link rel="stylesheet" href="./css/style.css">
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io(); // Crear el Socket
+        function creacionTurno(nombre){
+            if (nombre !='')
+                socket.emit('CrearTurno', nombre )
+        }
+
+    </script>
 </head>
 <body>
-    
+    <header>    
+        <h1>Solicitar Nuevo Turno</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a target="_blank"  href="turnoActual.html">Turno Actual</a></li>
+            <li><a target="_blank"  href="atencionTurno.html">Atender Turno</a></li>
+        </ul>
+    </nav>
+    <main>
+        <h2>Ingresa tu Nombre para ser atendido</h2>
+        <form id="nuevo-turno-form">
+            <label for="nombre">Nombre Completo:</label>
+            <input type="text" id="nombre" name="nombre" required>
+            <button onclick="creacionTurno(document.getElementById('nombre').value)">Solicita tu Turno</button>
+        </form>
+    </main>
 </body>
+<footer>
+    <div class="navbar2">
+        <p>&copy; 2024 Integracion de Aplicaciones - Todos los derechos reservados</p>
+        <a href="./index.html"><img src="./img/logoITS.png" alt="logo"></a>
+    </div>
+</footer>
 </html>
